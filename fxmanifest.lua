@@ -20,23 +20,24 @@ server_scripts {
 }
 
 exports {
-    'CooldownToTable',
-    'CooldownToString',
+	'CooldownToTable',
+	'CooldownToString',
 	'GetCooldown',
 	'GetTime'
 }
 
 server_exports {
-    'CooldownToTable',
-    'CooldownToString',
+	'CooldownToTable',
+	'CooldownToString',
 	'TimeToString',
 	'TimeToTable',
 	'GetCooldown',
-	'GetTime',
+	'GetCooldownWithFormat',
+	'GetTimeWithFormat',
 	'SetCooldown'
 }
 
 dependencies {
-    'mysql-async',
-    'es_extended'
+	'mysql-async',
+	'es_extended'
 }

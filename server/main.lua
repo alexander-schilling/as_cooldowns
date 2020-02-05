@@ -5,24 +5,40 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 local Cooldowns = {}
 
 function TimeToString(time)
-    local formattedDate = table.concat(Config.DateFormat, '/') .. " %H:%M:%S"
-    local str = os.date(formattedDate, time)
-
-    if Config.Debug then
-        print(string.format('^3[as_cooldowns]^7 TimeToString(%s) formattedDate: %s; final string: %s', time, formattedDate, str))
-    end
-
+	local formattedDate = table.concat(Config.DateFormat, '/') .. " %H:%M:%S"
+	local str = os.date(formattedDate, time)
+	
+	if Config.Debug then
+		print(string.format('^3[as_cooldowns]^7 TimeToString(%s) formattedDate: %s; final string: %s', time, formattedDate, str))
+	end
+	
 	return str
 end
 
 function TimeToTable(time)
-    local tab = os.date("*t", time)
-
-    if Config.Debug then
-        print(string.format('^3[as_cooldowns]^7 TimeToTable(%s) table: %s', time, json.encode(tab)))
-    end
-    
+	local tab = os.date("*t", time)
+	
+	if Config.Debug then
+		print(string.format('^3[as_cooldowns]^7 TimeToTable(%s) table: %s', time, json.encode(tab)))
+	end
+	
 	return tab
+end
+
+function DoesCooldownExist(cb, type)
+	if Cooldowns[type] then
+		cb(true)
+	else
+		MySQL.Async.fetchAll('SELECT `cooldown` FROM `cooldowns` WHERE `type` = @type', {
+			['@type'] = type
+		}, function(cooldowns)
+			if cooldowns ~= nil and cooldowns[1] ~= nil then
+				cb(true)
+			else
+				cb(false)
+			end
+		end)
+	end
 end
 
 function GetCooldown(cb, type)
@@ -42,20 +58,32 @@ function GetCooldown(cb, type)
 	end
 end
 
-function DoesCooldownExist(cb, type)
-	if Cooldowns[type] then
-		cb(true)
-	else
-		MySQL.Async.fetchAll('SELECT `cooldown` FROM `cooldowns` WHERE `type` = @type', {
-			['@type'] = type
-		}, function(cooldowns)
-			if cooldowns ~= nil and cooldowns[1] ~= nil then
-				cb(true)
-			else
-				cb(false)
-			end
-		end)
-	end
+function GetCooldownWithFormat(cb, type, format)
+	GetCooldown(function(cooldown)
+		if format == nil then
+			cb(cooldown - os.time())
+		elseif format == 'table' then
+			cb(CooldownToTable(cooldown - os.time()))
+		elseif format == 'string' then
+			cb(CooldownToString(cooldown - os.time()))
+		else
+			cb(cooldown - os.time())
+		end
+	end, type)
+end
+
+function GetTimeWithFormat(cb, type, format)
+	GetCooldown(function(cooldown)
+		if format == nil then
+			cb(cooldown)
+		elseif format == 'table' then
+			cb(TimeToTable(cooldown))
+		elseif format == 'string' then
+			cb(TimeToString(cooldown))
+		else
+			cb(cooldown)
+		end
+	end, type)
 end
 
 function SetCooldown(type, cooldown)
@@ -90,7 +118,7 @@ if Config.RegisterSetCooldown then
 		if Config.Debug then
 			print(string.format('^1[as_cooldowns]^7 setCooldown event has been called by source %s', source or 'resource'))
 		end
-
+		
 		SetCooldown(type, cooldown)
 	end)
 end
@@ -100,36 +128,20 @@ AddEventHandler('as_cooldowns:getCooldown', function(cb, type, format)
 	if Config.Debug then
 		print(string.format('^3[as_cooldowns]^7 getCooldown event has been called by source %s', source or 'resource'))
 	end
-
-	GetCooldown(function(cooldown)
-		if format == nil then
-			cb(cooldown - os.time())
-		elseif format == 'table' then
-			cb(CooldownToTable(cooldown - os.time()))
-		elseif format == 'string' then
-			cb(CooldownToString(cooldown - os.time()))
-		else
-			cb(cooldown - os.time())
-		end
-	end, type)
+	
+	GetCooldownWithFormat(function(cooldown)
+		cb(cooldown)
+	end, type, format)
 end)
 
 ESX.RegisterServerCallback('as_cooldowns:getCooldown', function(source, cb, type, format)
 	if Config.Debug then
 		print(string.format('^3[as_cooldowns]^7 getCooldown ESX callback has been called by source %s', source or 'resource'))
 	end
-
-	GetCooldown(function(cooldown)
-		if format == nil then
-			cb(cooldown - os.time())
-		elseif format == 'table' then
-			cb(CooldownToTable(cooldown - os.time()))
-		elseif format == 'string' then
-			cb(CooldownToString(cooldown - os.time()))
-		else
-			cb(cooldown - os.time())
-		end
-	end, type)
+	
+	GetCooldownWithFormat(function(cooldown)
+		cb(cooldown)
+	end, type, format)
 end)
 
 RegisterNetEvent('as_cooldowns:getTime')
@@ -137,43 +149,27 @@ AddEventHandler('as_cooldowns:getTime', function(cb, type, format)
 	if Config.Debug then
 		print(string.format('^3[as_cooldowns]^7 getTime event has been called by source %s', source or 'resource'))
 	end
-
-	GetCooldown(function(cooldown)
-		if format == nil then
-			cb(cooldown)
-		elseif format == 'table' then
-			cb(TimeToTable(cooldown))
-		elseif format == 'string' then
-			cb(TimeToString(cooldown))
-		else
-			cb(cooldown)
-		end
-	end, type)
+	
+	GetTimeWithFormat(function(cooldown)
+		cb(cooldown)
+	end, type, format)
 end)
 
 ESX.RegisterServerCallback('as_cooldowns:getTime', function(source, cb, type, format)
 	if Config.Debug then
 		print(string.format('^3[as_cooldowns]^7 getTime ESX callback has been called by source %s', source or 'resource'))
 	end
-
-	GetCooldown(function(cooldown)
-		if format == nil then
-			cb(cooldown)
-		elseif format == 'table' then
-			cb(TimeToTable(cooldown))
-		elseif format == 'string' then
-			cb(TimeToString(cooldown))
-		else
-			cb(cooldown)
-		end
-	end, type)
+	
+	GetTimeWithFormat(function(cooldown)
+		cb(cooldown)
+	end, type, format)
 end)
 
 if Config.Debug then
 	RegisterCommand('testtimetostring', function()
 		TimeToString(os.time())
 	end, false)
-
+	
 	RegisterCommand('testtimetotable', function()
 		TimeToTable(os.time())
 	end, false)

@@ -39,7 +39,7 @@ if Config.Debug then
 			print(cooldown)
 		end, args[1], args[2])
 	end, false)
-
+	
 	RegisterCommand('testgettime', function(source, args, rawCommand)
 		GetTime(function(time)
 			print(time)
