@@ -6,6 +6,7 @@ Simple cooldown system for FiveM using ESX and mysql-async
 
 ## Installation
 - Put the resource in your `resources` folder.
+- Import `as_cooldowns.sql` in your database.
 - I recommend to start this resource in your `server.cfg` before the ones that will use the cooldowns.
 - [Setup your scripts](#Usage), and you are ready to go.
 
