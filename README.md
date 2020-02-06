@@ -32,8 +32,7 @@ Parameters after the callback:
 - `format`: optional
   - `'string'`: returns the cooldown in [string format](#CooldownToString).
   - `'table'`: returns the cooldown as a [table](#CooldownToTable).
-#### Export
-##### Client and server side
+#### Export - Client and server side
 ```lua
 function myFunction()
     exports.as_cooldowns:GetCooldown(function(cooldown)
@@ -45,8 +44,7 @@ function myFunction()
     end, 'robbery_shop')
 end
 ```
-#### Event
-##### Client and server side
+#### Event - Client and server side
 ```lua
 function myFunction()
     TriggerEvent('as_cooldowns:getCooldown', function(cooldown)
@@ -58,8 +56,7 @@ function myFunction()
     end, 'robbery_shop')
 end
 ```
-#### ESX Server Callback
-##### Client side
+#### ESX Server Callback - Client side
 ```lua
 function myFunction()
     ESX.TriggerServerCallback('as_cooldowns:getCooldown', function(cooldown)
@@ -79,8 +76,7 @@ Parameters after the callback:
 - `format`: optional
   - `'string'`: returns the time in [string format](#TimeToString).
   - `'table'`: returns the time as a [table](#TimeToTable).
-#### Export
-##### Client and server side
+#### Export - Client and server side
 ```lua
 function myFunction()
     exports.as_cooldowns:GetTime(function(time)
@@ -88,8 +84,7 @@ function myFunction()
     end, 'robbery_shop', 'string')
 end
 ```
-#### Event
-##### Client and server side
+#### Event - Client and server side
 ```lua
 function myFunction()
     TriggerEvent('as_cooldowns:getTime', function(time)
@@ -97,8 +92,7 @@ function myFunction()
     end, 'robbery_shop', 'string')
 end
 ```
-#### ESX Server Callback
-##### Client side
+#### ESX Server Callback - Client side
 ```lua
 function myFunction()
     ESX.TriggerServerCallback('as_cooldowns:getTime', function(cooldown)
@@ -107,43 +101,38 @@ function myFunction()
 end
 ```
 
-#### SetCooldown
+### SetCooldown
 Sets or registers the cooldown.
 Parameters:
 - `type`: name to register for the cooldown.
 - `cooldown`: time of the cooldown (in seconds).
-##### Export
-###### Server side
+#### Export - Server side
 ```lua
 function myFunction()
     exports.as_cooldows:SetCooldown('robbery_shop', os.time() + 3600)
 end
 ```
-##### Event
-[Only if you enable it](#Configuration)
-###### Client side
+#### [Event - Client side](#Configuration)
 ```lua
 function myFunction()
     TriggerServerEvent('as_cooldowns:setCooldown', 'robbery_shop', os.time() + 3600)
 end
 ```
-###### Server side
+#### [Event - Server side](#Configuration)
 ```lua
 function myFunction()
     TriggerEvent('as_cooldowns:setCooldown', 'robbery_shop', os.time() + 3600)
 end
 ```
 
-### Utils
-#### CooldownToTable
+### CooldownToTable
 Returns a table with the remaining time of the cooldown, the table returns this values:
 - `isNegative`: `true/false` self explanatory.
 - `days`: remaining days.
 - `hours`: remaining hours.
 - `minutes`: remaining minutes.
 - `seconds`: remaining seconds.
-##### Export
-###### Client and server side
+#### Export - Client and server side
 ```lua
 function myFunction(cooldown)
     local myTable = exports.as_cooldowns:CooldownToTable(cooldown)
@@ -152,30 +141,27 @@ function myFunction(cooldown)
     end
 end
 ```
-#### CooldownToString
+### CooldownToString
 Returns a string with format, example output: `1:12:55:42`.
-##### Export
-###### Client and server side
+#### Export - Client and server side
 ```lua
 function myFunction(cooldown)
     local myString = exports.as_cooldowns:CooldownToString(cooldown)
     print(myString)
 end
 ```
-#### TimeToString
+### TimeToString
 Returns a string with [format](#Configuration), example output: `24/12/2020 23:59:50`.
-##### Export
-###### Server side
+#### Export - Server side
 ```lua
 function myFunction(myTime)
     local myString = exports.as_cooldowns:TimeToString(myTime)
     print(myString)
 end
 ```
-#### TimeToTable
+### TimeToTable
 Returns a table with the format of [`os.date("*t", time)`](https://www.lua.org/pil/22.1.html).
-##### Export
-###### Server side
+#### Export - Server side
 ```lua
 function myFunction(myTime)
     local myTable = exports.as_cooldowns:TimeToTable(myTime)
