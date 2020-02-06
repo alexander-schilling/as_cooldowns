@@ -19,8 +19,8 @@ Simple cooldown system for FiveM using ESX and mysql-async
 - `Config.RegisterSetCooldown`: `false` by default, I strongly recommend that this stays in false, use the export from server side.
   - `true`: it will mean that the event `as_cooldowns:setCooldown` can be triggered by clients.
   - `false`: the only way to set cooldowns from other resources is to use the export.
-- `Config.DateFormat`: format the date in the function TimeToString(time): '%d': day; '%m': month; '%Y': year; '%y': short year.
-  - Example: { '%d', '%m', '%Y' } will produce '20/05/2020'
+- `Config.DateFormat`: format the date in the function TimeToString(time): `'%d'`: day; `'%m'`: month; `'%Y'`: year; `'%y'`: short year.
+  - Example: `{ '%d', '%m', '%Y' }` will produce `20/05/2020`
   - More info: https://www.lua.org/pil/22.1.html
 
 ## Usage
