@@ -32,8 +32,7 @@ server_exports {
 	'TimeToString',
 	'TimeToTable',
 	'GetCooldown',
-	'GetCooldownWithFormat',
-	'GetTimeWithFormat',
+	'GetTime',
 	'SetCooldown'
 }
 

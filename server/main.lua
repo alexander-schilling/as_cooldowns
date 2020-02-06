@@ -25,6 +25,10 @@ function TimeToTable(time)
 	return tab
 end
 
+function FormatCooldown(time, format)
+	
+end
+
 function DoesCooldownExist(cb, type)
 	if Cooldowns[type] then
 		cb(true)
@@ -41,7 +45,7 @@ function DoesCooldownExist(cb, type)
 	end
 end
 
-function GetCooldown(cb, type)
+function FetchCooldown(cb, type)
 	if Cooldowns[type] then
 		cb(Cooldowns[type])
 	else
@@ -58,8 +62,8 @@ function GetCooldown(cb, type)
 	end
 end
 
-function GetCooldownWithFormat(cb, type, format)
-	GetCooldown(function(cooldown)
+function GetCooldown(cb, type, format)
+	FetchCooldown(function(cooldown)
 		if format == nil then
 			cb(cooldown - os.time())
 		elseif format == 'table' then
@@ -72,8 +76,8 @@ function GetCooldownWithFormat(cb, type, format)
 	end, type)
 end
 
-function GetTimeWithFormat(cb, type, format)
-	GetCooldown(function(cooldown)
+function GetTime(cb, type, format)
+	FetchCooldown(function(cooldown)
 		if format == nil then
 			cb(cooldown)
 		elseif format == 'table' then
@@ -129,7 +133,7 @@ AddEventHandler('as_cooldowns:getCooldown', function(cb, type, format)
 		print(string.format('^3[as_cooldowns]^7 getCooldown event has been called by source %s', source or 'resource'))
 	end
 	
-	GetCooldownWithFormat(function(cooldown)
+	GetCooldown(function(cooldown)
 		cb(cooldown)
 	end, type, format)
 end)
@@ -139,7 +143,7 @@ ESX.RegisterServerCallback('as_cooldowns:getCooldown', function(source, cb, type
 		print(string.format('^3[as_cooldowns]^7 getCooldown ESX callback has been called by source %s', source or 'resource'))
 	end
 	
-	GetCooldownWithFormat(function(cooldown)
+	GetCooldown(function(cooldown)
 		cb(cooldown)
 	end, type, format)
 end)
@@ -150,7 +154,7 @@ AddEventHandler('as_cooldowns:getTime', function(cb, type, format)
 		print(string.format('^3[as_cooldowns]^7 getTime event has been called by source %s', source or 'resource'))
 	end
 	
-	GetTimeWithFormat(function(cooldown)
+	GetTime(function(cooldown)
 		cb(cooldown)
 	end, type, format)
 end)
@@ -160,7 +164,7 @@ ESX.RegisterServerCallback('as_cooldowns:getTime', function(source, cb, type, fo
 		print(string.format('^3[as_cooldowns]^7 getTime ESX callback has been called by source %s', source or 'resource'))
 	end
 	
-	GetTimeWithFormat(function(cooldown)
+	GetTime(function(cooldown)
 		cb(cooldown)
 	end, type, format)
 end)
