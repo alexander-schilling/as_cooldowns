@@ -25,10 +25,6 @@ function TimeToTable(time)
 	return tab
 end
 
-function FormatCooldown(time, format)
-	
-end
-
 function DoesCooldownExist(cb, type)
 	if Cooldowns[type] then
 		cb(true)
